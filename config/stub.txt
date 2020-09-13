@@ -1,6 +1,7 @@
-read width:int height:int entity:int
-loop height read line:string(20)
+read width:int height:int boxCount:int
+loop height read line:string(30)
 
 gameloop
-read entityType:word(10) x:int y:int
+read pusherX:int pusherY:int
+loop boxCount read boxX:int boxY:int
 write U

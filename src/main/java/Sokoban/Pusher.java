@@ -1,18 +1,18 @@
 package Sokoban;
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
+import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
 
 public class Pusher {
     private Cell cell;
     private Sprite sprite;
-    private GraphicEntityModule graphics;
 
-    public Pusher(Cell cell, GraphicEntityModule graphics) {
+    public Pusher(Cell cell, GraphicEntityModule graphics, Group group) {
         this.cell = cell;
-        this.graphics = graphics;
 
         this.sprite = graphics.createSprite();
+        group.add(sprite);
         updateSprite();
     }
 
@@ -22,8 +22,8 @@ public class Pusher {
                 .setY(cell.getY()*Board.SPRITE_SIZE);
     }
 
-    public String getInput() {
-        return "PUSHER " + cell.getInput();
+    public Cell getCell() {
+        return cell;
     }
 
     public boolean move(int dir) {

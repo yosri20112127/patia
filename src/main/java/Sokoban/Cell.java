@@ -1,6 +1,7 @@
 package Sokoban;
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
+import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
 
 public class Cell {
@@ -11,12 +12,12 @@ public class Cell {
     private boolean dropzone;
     private Box box;
 
-    public Cell(int x, int y, int content, GraphicEntityModule graphics) {
+    public Cell(int x, int y, int digit, GraphicEntityModule graphics, Group group) {
         this.x = x;
         this.y = y;
-        wall = content == 1;
-        dropzone = content == 3;
-        if (content == 2) box = new Box(this, graphics);
+        wall = digit == 1;
+        dropzone = digit == 3 || digit == 5;
+        if (digit == 4 || digit == 5) box = new Box(this, graphics, group);
     }
 
     public int getX() {

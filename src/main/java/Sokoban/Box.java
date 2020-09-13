@@ -1,16 +1,17 @@
 package Sokoban;
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
+import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
 
 public class Box {
     private Cell cell;
     private Sprite sprite;
-    private GraphicEntityModule graphics;
 
-    public Box(Cell cell, GraphicEntityModule graphics) {
+    public Box(Cell cell, GraphicEntityModule graphics, Group group) {
         this.cell = cell;
         this.sprite = graphics.createSprite();
+        group.add(sprite);
         updateSprite();
     }
 
@@ -24,8 +25,8 @@ public class Box {
         return cell.isDropzone();
     }
 
-    public String getInput() {
-        return "BOX " + cell.getInput();
+    public Cell getCell() {
+        return cell;
     }
 
     public void moveTo(Cell boxNext) {
