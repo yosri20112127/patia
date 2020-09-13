@@ -2,11 +2,15 @@ import java.util.Scanner;
 
 public class Agent1 {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            String input = scanner.nextLine();
-            System.out.println("my output");
-        }
+        System.out.println("D");
+        System.out.println("U");
+        System.out.println("L");
+        System.out.println("L");
+        System.out.println("R");
+        System.out.println("U");
+        System.out.println("U");
+        System.out.println("D");
+        System.out.println("R");
+        System.out.println("R");
     }
 }

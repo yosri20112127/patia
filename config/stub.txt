@@ -1,0 +1,6 @@
+read width:int height:int entity:int
+loop height read line:string(20)
+
+gameloop
+read entityType:word(10) x:int y:int
+write U

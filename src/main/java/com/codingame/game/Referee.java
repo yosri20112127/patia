@@ -1,37 +1,43 @@
 package com.codingame.game;
 import java.util.List;
 
+import Sokoban.Board;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
-import com.codingame.gameengine.core.MultiplayerGameManager;
+import com.codingame.gameengine.core.SoloGameManager;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
-    // Uncomment the line below and comment the line under it to create a Solo Game
-    // @Inject private SoloGameManager<Player> gameManager;
-    @Inject private MultiplayerGameManager<Player> gameManager;
-    @Inject private GraphicEntityModule graphicEntityModule;
+    @Inject
+    private SoloGameManager<Player> gameManager;
+    @Inject
+    private GraphicEntityModule graphicEntityModule;
+    private Board board;
 
     @Override
     public void init() {
-        // Initialize your game here.
+        gameManager.setMaxTurns(600);
+
+        List<String> input = gameManager.getTestCaseInput();
+        board = new Board(input, graphicEntityModule);
     }
 
     @Override
     public void gameTurn(int turn) {
-        for (Player player : gameManager.getActivePlayers()) {
-            player.sendInputLine("input");
-            player.execute();
+        Player player = gameManager.getPlayer();
+        for (String line : board.getInput(turn == 1)) {
+            player.sendInputLine(line);
+        }
+        player.execute();
+
+        try {
+            List<String> outputs = player.getOutputs();
+            if (!board.playAction(outputs.get(0))) gameManager.loseGame("invalid move");
+        } catch (TimeoutException e) {
+            gameManager.loseGame("timeout");
         }
 
-        for (Player player : gameManager.getActivePlayers()) {
-            try {
-                List<String> outputs = player.getOutputs();
-                // Check validity of the player output and compute the new game state
-            } catch (TimeoutException e) {
-                player.deactivate(String.format("$%d timeout!", player.getIndex()));
-            }
-        }        
+        if (board.isWin()) gameManager.winGame();
     }
 }
