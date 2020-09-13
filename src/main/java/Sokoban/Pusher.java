@@ -3,12 +3,15 @@ package Sokoban;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
+import com.codingame.gameengine.module.tooltip.TooltipModule;
 
 public class Pusher {
+    private TooltipModule tooltipModule;
     private Cell cell;
     private Sprite sprite;
 
-    public Pusher(Cell cell, GraphicEntityModule graphics, Group group) {
+    public Pusher(Cell cell, GraphicEntityModule graphics, Group group, TooltipModule tooltipModule) {
+        this.tooltipModule = tooltipModule;
         this.cell = cell;
 
         this.sprite = graphics.createSprite();
@@ -20,6 +23,7 @@ public class Pusher {
         this.sprite.setImage("player_03.png")
                 .setX(cell.getX()*Board.SPRITE_SIZE)
                 .setY(cell.getY()*Board.SPRITE_SIZE);
+        tooltipModule.setTooltipText(sprite, "PUSHER\nx: " + cell.getX() + "\ny: " + cell.getY());
     }
 
     public Cell getCell() {

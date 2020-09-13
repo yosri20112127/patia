@@ -4,6 +4,7 @@ import com.codingame.gameengine.module.entities.BufferedGroup;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
+import com.codingame.gameengine.module.tooltip.TooltipModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class Board {
 
     private GraphicEntityModule graphics;
 
-    public Board(List<String> input, GraphicEntityModule graphics) {
+    public Board(List<String> input, GraphicEntityModule graphics, TooltipModule tooltipModule) {
         this.graphics = graphics;
         String[] map = input.get(0).split("\\|");
         height = map.length;
@@ -33,9 +34,9 @@ public class Board {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 int digit = map[y].charAt(x) - '0';
-                grid[x][y] = new Cell(x, y, digit, graphics, group);
+                grid[x][y] = new Cell(x, y, digit, graphics, group, tooltipModule);
                 if (grid[x][y].hasBox()) boxes.add(grid[x][y].getBox());
-                if (digit >= 6) pusher = new Pusher(grid[x][y], graphics, group);
+                if (digit >= 6) pusher = new Pusher(grid[x][y], graphics, group, tooltipModule);
             }
         }
 

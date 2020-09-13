@@ -6,6 +6,7 @@ import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.SoloGameManager;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
+import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
@@ -13,6 +14,8 @@ public class Referee extends AbstractReferee {
     private SoloGameManager<Player> gameManager;
     @Inject
     private GraphicEntityModule graphicEntityModule;
+    @Inject
+    TooltipModule tooltipModule;
     private Board board;
 
     @Override
@@ -21,7 +24,7 @@ public class Referee extends AbstractReferee {
         gameManager.setFrameDuration(300);
 
         List<String> input = gameManager.getTestCaseInput();
-        board = new Board(input, graphicEntityModule);
+        board = new Board(input, graphicEntityModule, tooltipModule);
     }
 
     @Override

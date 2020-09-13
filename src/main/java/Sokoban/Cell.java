@@ -3,8 +3,10 @@ package Sokoban;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
+import com.codingame.gameengine.module.tooltip.TooltipModule;
 
 public class Cell {
+    private TooltipModule tooltipModule;
     private int x;
     private int y;
     private Cell[] neighbors = new Cell[4];
@@ -12,12 +14,13 @@ public class Cell {
     private boolean dropzone;
     private Box box;
 
-    public Cell(int x, int y, int digit, GraphicEntityModule graphics, Group group) {
+    public Cell(int x, int y, int digit, GraphicEntityModule graphics, Group group, TooltipModule tooltipModule) {
+        this.tooltipModule = tooltipModule;
         this.x = x;
         this.y = y;
         wall = digit == 1;
         dropzone = digit == 3 || digit == 5;
-        if (digit == 4 || digit == 5) box = new Box(this, graphics, group);
+        if (digit == 4 || digit == 5) box = new Box(this, graphics, group, tooltipModule);
     }
 
     public int getX() {
@@ -50,7 +53,11 @@ public class Cell {
 
     public Sprite getSprite(GraphicEntityModule graphics) {
         if (isWall()) return graphics.createSprite().setImage("block_06.png");
-        if (isDropzone()) return graphics.createSprite().setImage("ground_01.png");
+        if (isDropzone()) {
+            Sprite sprite = graphics.createSprite().setImage("ground_01.png");
+            tooltipModule.setTooltipText(sprite, "TARGET\nx: " + getX() + "\ny: " + getY());
+            return sprite;
+        }
         return graphics.createSprite().setImage("ground_04.png");
     }
 
