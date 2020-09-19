@@ -16,6 +16,7 @@ public class Board {
     private ArrayList<Box> boxes = new ArrayList<>();
     private Pusher pusher;
     public static final int SPRITE_SIZE = 128;
+    public static final int BORDER_SIZE = 20;
 
     private GraphicEntityModule graphics;
 
@@ -26,9 +27,14 @@ public class Board {
         width = map[0].length();
 
         Group group = graphics.createGroup();
-        double scaleX = (double) graphics.getWorld().getWidth()/ (SPRITE_SIZE * width );
-        double scaleY = (double)graphics.getWorld().getHeight()/ (SPRITE_SIZE * height );
-        group.setScale(Math.min(scaleX, scaleY));
+        double scaleX = ((double) graphics.getWorld().getWidth() - 2 * BORDER_SIZE) / (SPRITE_SIZE * width);
+        double scaleY = ((double) graphics.getWorld().getHeight() - 2 * BORDER_SIZE) / (SPRITE_SIZE * height);
+        double scale = Math.min(scaleX, scaleY);
+        group.setScale(scale);
+        double w = width * SPRITE_SIZE * scale;
+        double h = height * SPRITE_SIZE * scale;
+        group.setX((int) ((graphics.getWorld().getWidth() - w) / 2));
+        group.setY((int) ((graphics.getWorld().getHeight() - h) / 2));
 
         grid = new Cell[width][height];
         for (int y = 0; y < height; y++) {
@@ -40,18 +46,29 @@ public class Board {
             }
         }
 
-        //BufferedGroup bufferedGroup = graphics.createBufferedGroup().setZIndex(-1).setScale(group.getScaleX());
-        Group bufferedGroup = graphics.createGroup().setZIndex(-1).setScale(group.getScaleX());
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Sprite sprite = grid[x][y].getSprite(graphics);
+        //BufferedGroup bufferedGroup = graphics.createBufferedGroup().setZIndex(-1);
+        Group bufferedGroup = graphics.createGroup().setZIndex(-1);
+        group.add(bufferedGroup);
+        int xMin = 0, yMin = 0, xMax = width, yMax = height;
+        while (group.getX() + xMin * SPRITE_SIZE * scale > 0) xMin--;
+        while (group.getY() + yMin * SPRITE_SIZE * scale > 0) yMin--;
+        while (group.getX() + (xMax + 1) * SPRITE_SIZE * scale < graphics.getWorld().getWidth()) xMax++;
+        while (group.getY() + (yMax + 1) * SPRITE_SIZE * scale < graphics.getWorld().getHeight()) yMax++;
+
+        for (int x = xMin; x <= xMax; x++) {
+            for (int y = yMin; y <= yMax; y++) {
+                Sprite sprite;
+                if (x >= 0 && x < width && y >= 0 && y < height) {
+                    sprite = grid[x][y].getSprite(graphics);
+                    grid[x][y].initNeighbors(grid);
+                } else {
+                    sprite = graphics.createSprite().setImage("outside.png");
+                }
                 sprite.setX(x * SPRITE_SIZE).setY(y * SPRITE_SIZE);
                 bufferedGroup.add(sprite);
 
-                grid[x][y].initNeighbors(grid);
             }
         }
-
     }
 
     public boolean isWin() {

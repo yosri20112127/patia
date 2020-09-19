@@ -12,6 +12,7 @@ public class Cell {
     private Cell[] neighbors = new Cell[4];
     private boolean wall;
     private boolean dropzone;
+    private boolean outside;
     private Box box;
 
     public Cell(int x, int y, int digit, GraphicEntityModule graphics, Group group, TooltipModule tooltipModule) {
@@ -19,6 +20,7 @@ public class Cell {
         this.x = x;
         this.y = y;
         wall = digit == 1;
+        outside = digit == 0;
         dropzone = digit == 3 || digit == 5;
         if (digit == 4 || digit == 5) box = new Box(this, graphics, group, tooltipModule);
     }
@@ -52,13 +54,14 @@ public class Cell {
     }
 
     public Sprite getSprite(GraphicEntityModule graphics) {
-        if (isWall()) return graphics.createSprite().setImage("block_06.png");
+        if (outside) return graphics.createSprite().setImage("outside.png");
+        if (isWall()) return graphics.createSprite().setImage("wall.png");
         if (isDropzone()) {
-            Sprite sprite = graphics.createSprite().setImage("ground_01.png");
+            Sprite sprite = graphics.createSprite().setImage("target.png");
             tooltipModule.setTooltipText(sprite, "TARGET\nx: " + getX() + "\ny: " + getY());
             return sprite;
         }
-        return graphics.createSprite().setImage("ground_04.png");
+        return graphics.createSprite().setImage("ground.png");
     }
 
     public char getMapChar() {
