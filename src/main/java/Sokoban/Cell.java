@@ -15,14 +15,22 @@ public class Cell {
     private boolean outside;
     private Box box;
 
-    public Cell(int x, int y, int digit, GraphicEntityModule graphics, Group group, TooltipModule tooltipModule) {
+    public Cell(int x, int y, char c, GraphicEntityModule graphics, Group group, TooltipModule tooltipModule) {
         this.tooltipModule = tooltipModule;
         this.x = x;
         this.y = y;
-        wall = digit == 1;
-        outside = digit == 0;
-        dropzone = digit == 3 || digit == 5;
-        if (digit == 4 || digit == 5) box = new Box(this, graphics, group, tooltipModule);
+        wall = c == '#';
+        outside = true;
+        dropzone = c == '.' || c == '*' || c == '+';
+        if (c == '*' || c == '$') box = new Box(this, graphics, group, tooltipModule);
+    }
+
+    public void visit() {
+        if (!outside || wall) return;
+        outside = false;
+        for (Cell cell : neighbors) {
+            if (cell != null) cell.visit();
+        }
     }
 
     public int getX() {
@@ -54,8 +62,8 @@ public class Cell {
     }
 
     public Sprite getSprite(GraphicEntityModule graphics) {
-        if (outside) return graphics.createSprite().setImage("outside.png");
         if (isWall()) return graphics.createSprite().setImage("wall.png");
+        if (outside) return graphics.createSprite().setImage("outside.png");
         if (isDropzone()) {
             Sprite sprite = graphics.createSprite().setImage("target.png");
             tooltipModule.setTooltipText(sprite, "TARGET\nx: " + getX() + "\ny: " + getY());

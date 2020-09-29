@@ -22,9 +22,9 @@ public class Board {
 
     public Board(List<String> input, GraphicEntityModule graphics, TooltipModule tooltipModule) {
         this.graphics = graphics;
-        String[] map = input.get(0).split("\\|");
-        height = map.length;
-        width = map[0].length();
+        height = input.size();
+        width = 0;
+        for (int y = 0; y < height; y++) width = Math.max(width, input.get(y).length());
 
         Group group = graphics.createGroup();
         double scaleX = ((double) graphics.getWorld().getWidth() - 2 * BORDER_SIZE) / (SPRITE_SIZE * width);
@@ -39,12 +39,19 @@ public class Board {
         grid = new Cell[width][height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int digit = map[y].charAt(x) - '0';
-                grid[x][y] = new Cell(x, y, digit, graphics, group, tooltipModule);
+                char c = ' ';
+                if (input.get(y).length() > x) c = input.get(y).charAt(x);
+                grid[x][y] = new Cell(x, y, c, graphics, group, tooltipModule);
                 if (grid[x][y].hasBox()) boxes.add(grid[x][y].getBox());
-                if (digit >= 6) pusher = new Pusher(grid[x][y], graphics, group, tooltipModule);
+                if (c == '@' || c == '+') pusher = new Pusher(grid[x][y], graphics, group, tooltipModule);
             }
         }
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                grid[x][y].initNeighbors(grid);
+            }
+        }
+        pusher.getCell().visit();
 
         //BufferedGroup bufferedGroup = graphics.createBufferedGroup().setZIndex(-1);
         Group bufferedGroup = graphics.createGroup().setZIndex(-1);
@@ -60,7 +67,6 @@ public class Board {
                 Sprite sprite;
                 if (x >= 0 && x < width && y >= 0 && y < height) {
                     sprite = grid[x][y].getSprite(graphics);
-                    grid[x][y].initNeighbors(grid);
                 } else {
                     sprite = graphics.createSprite().setImage("outside.png");
                 }
