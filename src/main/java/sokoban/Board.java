@@ -1,6 +1,5 @@
-package Sokoban;
+package sokoban;
 
-import com.codingame.gameengine.module.entities.BufferedGroup;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;

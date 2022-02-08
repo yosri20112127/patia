@@ -1,4 +1,4 @@
-package Sokoban;
+package sokoban;
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;

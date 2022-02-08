@@ -1,8 +1,7 @@
-package Sokoban;
+package sokoban;
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
-import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.gameengine.module.entities.SpriteAnimation;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 

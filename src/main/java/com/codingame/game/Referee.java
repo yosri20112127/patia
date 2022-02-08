@@ -1,13 +1,14 @@
 package com.codingame.game;
-import java.util.List;
 
-import Sokoban.Board;
+import sokoban.Board;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.SoloGameManager;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.google.inject.Inject;
+
+import java.util.List;
 
 public class Referee extends AbstractReferee {
     @Inject
