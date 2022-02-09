@@ -1,5 +1,7 @@
 Play the game on [CodinGame](https://www.codingame.com/training/hard/sokoban)
 
+Maven is needed.
+
 Install pddl4j (https://github.com/pellierd/pddl4j) in your local maven repo:
 ```
 mvn install:install-file \
