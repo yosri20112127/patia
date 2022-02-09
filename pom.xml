@@ -47,7 +47,8 @@
     </dependencies>
 
     <build>
-        <plugins>
+      
+      <plugins>
           <!-- any other plugins -->
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
@@ -65,6 +66,20 @@
               </descriptorRefs>
             </configuration>
           </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+            <configuration>
+              <mainClass>sokoban.SokobanMain</mainClass>
+            </configuration>
+            </execution>
+          </executions>
+          </plugin>
+
         </plugins>
       </build>
 </project>
