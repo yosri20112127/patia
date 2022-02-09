@@ -15,5 +15,5 @@ mvn install:install-file \
    -DgroupId=fr.uga.pddl4j \
    -DartifactId=pddl4j \
    -Dversion=4.0.0 \
-   -Dpackaging=jar> \
+   -Dpackaging=jar \
    -DgeneratePom=true
