@@ -1,0 +1,5 @@
+Courbes pour le taquin en python
+pddl Tours de Hanoï
+pddl Taquin
+Sokoban
+SAT planner
