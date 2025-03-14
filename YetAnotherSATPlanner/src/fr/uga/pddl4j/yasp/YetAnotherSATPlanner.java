@@ -102,12 +102,31 @@ public class YetAnotherSATPlanner extends AbstractStateSpacePlanner {
 
             while (doSearch && !(steps > stepmax)) {
                 
-                // TO BE DONE!
-                // Add the clauses of the SAT encoding to the SAT solver
-                // Solve the SAT problem
-                // If the problem is unsatisfiable, stop the search
-                // If the problem is satisfiable, extract the plan
-                // Otherwise, increment the number of steps and continue the search
+                for(int i < sat.currentDimacs.size(); i++){
+                    List<Integer> cl = sat.currentDimacs.get(i);
+                    init[] clause = cl.stream()
+                    //TO BE COMPLETED
+                    IVEcInt goal = new VecInt();
+                    for (Integer g : sat.currentGoal){
+                        cgoal.push(g);
+                    }
+                    try{
+                        if(ip.isSolvable(cgoal)){
+                            int[] model = ip.model();
+                            List<Integer> solution = Arrays.stream(model).boxed().collect(Collectors.toList());
+                            plan = sat.extractPlan(solution,problem);
+                            doSearch = false;
+                        }
+                    }catch(TimeoutException e){
+                        System.out.println("Pas de solution trouvée");
+                        System.exit(1);
+                    }
+                    if(doSearch){
+                        steps++;
+                        sat.next();
+                    }
+                }
+
             }
         }
         return plan;

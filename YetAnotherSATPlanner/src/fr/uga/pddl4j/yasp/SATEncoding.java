@@ -60,9 +60,14 @@ public final class SATEncoding {
 
     /*
      * Current number of steps of the SAT encoding
+     * = profondeur pour résoudre le plan
      */
     private int steps;
 
+    /*
+    * 
+    * 
+    */
     public SATEncoding(Problem problem, int steps) {
 
         this.steps = steps;
@@ -76,7 +81,16 @@ public final class SATEncoding {
         //System.out.println(" fluents = " + nb_fluents );
         final BitVector init = problem.getInitialState().getPositiveFluents();
         
-        // TO BE DONE!
+        for(int i = 0; i< nb_fluents; i++){
+            List<Integer> clause = new ArrayList<Integer>();
+            if(init.get(i)==true){ //si le bit est à 1, écrire l'entier
+                //i+1 car les indices commencent à 1
+                clause.add(pair(i+1,1));
+            }else{ //sinon, écrire -l'entier
+                clause.add(-pair(i+1,1));
+            }
+            this.initList.add(clause);
+        }
 
         // Makes DIMACS encoding from 1 to steps
         encode(1, steps);
@@ -171,11 +185,56 @@ public final class SATEncoding {
         return new int[]{bitnum, step}; //Returning an array containing the two numbers
     }
 
+    /*
+    * crée la formule SAT définitive à de la pofondeur 0 (état initial) jusqu'à une certaine profondeur step (profondeur max), 
+    * à passer au SAT solver
+    */
     private void encode(int from, int to) {
         this.currentDimacs.clear();
+        //encoder de 0 (étape initiale) à step(profondeur max)
         
-        // TO BE DONE!
+        List<Integer> formule = new ArrayList(); //contient les listes d'entiers
+        //coder l'état initial
+        //ici initList est vide
+        InitialState is = problem.getInitialState();
+        List<NumericVariables> var_is = is.getNumericVariables();
+        for(int j = 0; i<var_is.size();j++){
+            List<Integer> clause = new ArrayList<Integer>();
+            clause.add(pair(var_is.get(i)));
+        }
 
+        for(int i = 0;){
+            Action a = problem.getActions().get(i);
+            BitVector precond = a.getPrecondition().getPositiveFluents();
+
+            BitVector positive = a.getUnconditionnalEffects().getPositiveFluents();
+            BitVector negative = a.getUnconditionnalEffects().getNegativeFluents();
+            for (int j = 0; j<nb_fluents;j++){
+                if(precond.get(j)==true){
+                    //action encoding
+                    List<Integer> clause = new ArrayList<Integer>();
+                    clause.add();
+                }
+            }
+            //coder toutes les possibilité de l'espace de recherche jusqu'à une profondeur donnée
+            //but
+
+            //action
+            for(int i = 0; i< problem.getActions(); i++){
+
+            }
+
+            //changement d'état
+
+            //disjonction d'actions
+
+            //si pas de solution, ajouter l'étape suivante à la formule SAT
+            next();
+
+            //faire une étape supplémentaire
+
+            //ajouter à la formule finale
+        }
         System.out.println("Encoding : successfully done (" + (this.currentDimacs.size()
                 + this.currentGoal.size()) + " clauses, " + to + " steps)");
     }
