@@ -7,9 +7,8 @@
   (:init
     (on-tower d4 t1)
     (on-disk d3 d4) (on-disk d2 d3) (on-disk d1 d2)
-    (on-top d1)    ; d1 est le disque supérieur de la pile
-    (clear t2) (clear t3) ; Les tours t2 et t3 sont vides
-    
+    (on-top d1)
+    (clear t2) (clear t3)
     (smaller d1 d2) (smaller d1 d3) (smaller d1 d4)
     (smaller d2 d3) (smaller d2 d4)
     (smaller d3 d4)
@@ -18,7 +17,7 @@
   (:goal (and
     (on-tower d4 t3)
     (on-disk d3 d4) (on-disk d2 d3) (on-disk d1 d2)
-    (on-top d1)  ; d1 doit être en haut de la pile
-    (clear t1) (clear t2)  ; Les tours t1 et t2 doivent être vides
+    (on-top d1)
+    (clear t1) (clear t2) 
   ))
 )

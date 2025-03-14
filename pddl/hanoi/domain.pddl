@@ -3,11 +3,11 @@
   (:types disk tower)
   
   (:predicates
-    (on-disk ?x - disk ?y - disk)     ; Un disque est sur un autre disque
-    (on-tower ?x - disk ?y - tower)   ; Un disque est sur une tour
-    (clear ?x - tower)                ; Une tour est vide sur le dessus
-    (smaller ?x - disk ?y - disk)     ; Un disque est plus petit qu'un autre
-    (on-top ?x - disk)                ; Un disque est au sommet d'une tour ou d'un autre disque
+    (on-disk ?x - disk ?y - disk)    ;le dsique x est sur le disque y
+    (on-tower ?x - disk ?y - tower)   ;le disque x est sur la tour y
+    (clear ?x - tower)              ;la tour est vide
+    (smaller ?x - disk ?y - disk)     ;le disque x est plus petit que le disque y
+    (on-top ?x - disk)            ;le disque x est en sommet de tour
   )
 
   (:action move-disk-from-disk-to-disk
@@ -20,7 +20,7 @@
     )
     :effect (and
       (not (on-disk ?d ?from-disk))
-      (not (on-top ?d))
+      (not (on-top ?to-disk))
       (on-disk ?d ?to-disk)
       (on-top ?d)
       (on-top ?from-disk)
@@ -36,7 +36,6 @@
     )
     :effect (and
       (not (on-tower ?d ?from-tower))
-      (not (on-top ?d))
       (on-tower ?d ?to-tower)
       (on-top ?d)
       (not (clear ?to-tower))
@@ -45,7 +44,7 @@
   )
 
   (:action move-disk-from-tower-to-disk
-    :parameters (?d - disk ?to-disk - disk ?from-tower - tower)
+    :parameters (?d - disk ?from-tower - tower ?to-disk - disk)
     :precondition (and
       (on-tower ?d ?from-tower)
       (on-top ?d)
@@ -54,7 +53,7 @@
     )
     :effect (and
       (not (on-tower ?d ?from-tower))
-      (not (on-top ?d))
+      (not (on-top ?to-disk))
       (on-disk ?d ?to-disk)
       (on-top ?d)
       (clear ?from-tower)
