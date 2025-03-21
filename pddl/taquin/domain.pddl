@@ -1,11 +1,13 @@
 (define (domain taquin)
   (:requirements :strips :typing)
   (:types tile position)
-
+  (:constants
+    p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 - position
+  )
   (:predicates
-    (at ?t - tile ?p - position)  ; La tuile ?t est à la position ?p
-    (empty ?p - position)         ; La position ?p est vide
-    (adjacent ?p1 - position ?p2 - position) ; Les positions sont adjacentes
+    (at ?t - tile ?p - position)
+    (empty ?p - position)
+    (adjacent ?p1 - position ?p2 - position)
   )
 
   ;; Déplacer une tuile vers la case vide
