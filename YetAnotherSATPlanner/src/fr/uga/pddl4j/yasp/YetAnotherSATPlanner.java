@@ -21,6 +21,7 @@ import org.sat4j.specs.IVecInt;
 import org.sat4j.specs.TimeoutException;
 
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,37 +101,53 @@ public class YetAnotherSATPlanner extends AbstractStateSpacePlanner {
             // Seach starts here!
             boolean doSearch = true;
 
+            //TODO
             while (doSearch && !(steps > stepmax)) {
-                
-                for(int i < sat.currentDimacs.size(); i++){
-                    List<Integer> cl = sat.currentDimacs.get(i);
-                    init[] clause = cl.stream()
-                    //TO BE COMPLETED
-                    IVEcInt goal = new VecInt();
-                    for (Integer g : sat.currentGoal){
-                        cgoal.push(g);
-                    }
-                    try{
-                        if(ip.isSolvable(cgoal)){
-                            int[] model = ip.model();
-                            List<Integer> solution = Arrays.stream(model).boxed().collect(Collectors.toList());
-                            plan = sat.extractPlan(solution,problem);
-                            doSearch = false;
+                try {
+                    // Réinitialiser le solveur avant d'ajouter les nouvelles clauses
+                    solver.reset();
+                    
+                    // Ajouter toutes les clauses SAT dans le solveur
+                    for (List<Integer> clauseList : sat.formule) {
+                        IVecInt clause = new VecInt();
+                        for (Integer literal : clauseList) {
+                            clause.push(literal);
+                            System.out.println("action : "+clause);
                         }
-                    }catch(TimeoutException e){
-                        System.out.println("Pas de solution trouvée");
-                        System.exit(1);
+                        solver.addClause(clause); // Ajout de la clause
                     }
-                    if(doSearch){
-                        steps++;
-                        sat.next();
-                    }
-                }
 
+                    // Ajouter l'objectif courant au solveur
+                    IVecInt goalClause = new VecInt();
+                    for (Integer goalLiteral : sat.currentGoal) {
+                        goalClause.push(goalLiteral);
+                    }
+                    solver.addClause(goalClause);
+                    System.out.println("goalClause : "+goalClause);
+
+                    // Vérification de la satisfiabilité
+                    if (solver.isSatisfiable()) {
+                        int[] model = solver.model();
+                        List<Integer> solution = Arrays.stream(model).boxed().collect(Collectors.toList());
+                        plan = sat.extractPlan(solution, problem);
+                        doSearch = false;
+                    } else {
+                        steps++;
+                        sat.next(); // Génération du nouvel état SAT avec une profondeur supplémentaire
+                    }
+                } catch (ContradictionException e) {
+                    System.out.println("Pas de solution avec la profondeur actuelle.");
+                    doSearch = false;
+                } catch (TimeoutException e) {
+                    System.out.println("Timeout atteint !");
+                    System.exit(1);
+                }
             }
+        //TODO
         }
         return plan;
     }
+        
     public static void main(final String[] args) {
 
         // Checks the number of arguments from the command line

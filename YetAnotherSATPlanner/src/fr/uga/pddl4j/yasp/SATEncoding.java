@@ -51,7 +51,7 @@ public final class SATEncoding {
      * Contains the initial state, actions and action disjunction
      * Goal is no there!
      */
-    public List<List<Integer>> currentDimacs = new ArrayList<List<Integer>>();
+    public List<List<Integer>> formule = new ArrayList<List<Integer>>();
 
     /*
      * Current goal encoding
@@ -190,53 +190,25 @@ public final class SATEncoding {
     * à passer au SAT solver
     */
     private void encode(int from, int to) {
-        this.currentDimacs.clear();
-        //encoder de 0 (étape initiale) à step(profondeur max)
+        formule.clear();
         
-        List<Integer> formule = new ArrayList(); //contient les listes d'entiers
-        //coder l'état initial
-        //ici initList est vide
-        InitialState is = problem.getInitialState();
-        List<NumericVariables> var_is = is.getNumericVariables();
-        for(int j = 0; i<var_is.size();j++){
-            List<Integer> clause = new ArrayList<Integer>();
-            clause.add(pair(var_is.get(i)));
+        //l'état initial
+        formule.addAll(initList);
+        
+        //actions et transitions d'état
+        for (int t = from; t < to; t++) {
+            formule.addAll(actionPreconditionList);
+            formule.addAll(actionEffectList);
+            formule.addAll(stateTransitionList);
         }
-
-        for(int i = 0;){
-            Action a = problem.getActions().get(i);
-            BitVector precond = a.getPrecondition().getPositiveFluents();
-
-            BitVector positive = a.getUnconditionnalEffects().getPositiveFluents();
-            BitVector negative = a.getUnconditionnalEffects().getNegativeFluents();
-            for (int j = 0; j<nb_fluents;j++){
-                if(precond.get(j)==true){
-                    //action encoding
-                    List<Integer> clause = new ArrayList<Integer>();
-                    clause.add();
-                }
-            }
-            //coder toutes les possibilité de l'espace de recherche jusqu'à une profondeur donnée
-            //but
-
-            //action
-            for(int i = 0; i< problem.getActions(); i++){
-
-            }
-
-            //changement d'état
-
-            //disjonction d'actions
-
-            //si pas de solution, ajouter l'étape suivante à la formule SAT
-            next();
-
-            //faire une étape supplémentaire
-
-            //ajouter à la formule finale
-        }
-        System.out.println("Encoding : successfully done (" + (this.currentDimacs.size()
-                + this.currentGoal.size()) + " clauses, " + to + " steps)");
+        
+        // Encoder les disjonctions d'actions
+        formule.addAll(actionDisjunctionList);
+        
+        //objectif
+        formule.add(goalList);
+        System.out.println("formule : "+formule);
+        
+        System.out.println("Encoding : successfully done (" + (this.formule.size() + this.currentGoal.size()) + " clauses, " + to + " steps)");
     }
-
 }
