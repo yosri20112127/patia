@@ -6,8 +6,8 @@ public class SokobanMain {
     public static void main(String[] args) {
         SoloGameRunner gameRunner = new SoloGameRunner();
         gameRunner.setAgent(Agent.class);
-        gameRunner.setTestCase("test21.json");
+        gameRunner.setTestCase("test12.json");
 
-        gameRunner.start();
+        gameRunner.start(4200);
     }
 }
